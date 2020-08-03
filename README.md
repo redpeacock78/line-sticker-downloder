@@ -1,14 +1,14 @@
-## line-stirker-downloder
+## line-sticker-downloder
 ### Install
 ```bash
-$ npm install -g line-stirker-downloder
+$ npm install -g line-sticker-downloder
              or
-$ yarn global add line-stirker-downloder
+$ yarn global add line-sticker-downloder
 ```
 or
 ```bash
-$ git clone https://github.com/redpeacock78/line-stirker-downloder
-$ cd line-stirker-downloder/
+$ git clone https://github.com/redpeacock78/line-sticker-downloder
+$ cd line-sticker-downloder/
 $ npm install
       or
 $ yarn install
