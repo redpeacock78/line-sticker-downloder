@@ -20,7 +20,7 @@ $ yarn global add
 ### Usage
 ```bash
 $ line-sticker -h
-Usage: main line-sticker [options] [sticker_id]
+Usage: main [options] [sticker_id]
 
 Options:
   -V, --version    output the version number
