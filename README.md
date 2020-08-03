@@ -20,7 +20,7 @@ $ yarn global add
 ### Usage
 ```bash
 $ lsdl -h
-Usage: main [options] [sticker_id]
+Usage: lsdl [options] [sticker_id]
 
 Options:
   -V, --version    output the version number
