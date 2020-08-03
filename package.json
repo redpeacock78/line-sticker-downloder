@@ -9,7 +9,7 @@
     "lsdl": "./bin/main.js"
   },
   "name": "line-sticker-downloder",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/main.js",
   "author": "redpeacock78",
   "license": "MIT",
