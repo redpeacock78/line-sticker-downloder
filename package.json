@@ -8,7 +8,7 @@
   "bin": {
     "lsdl": "./bin/main.js"
   },
-  "name": "line-sticker",
+  "name": "line-sticker-downloder",
   "version": "1.0.0",
   "main": "dist/main.js",
   "author": "redpeacock78",
