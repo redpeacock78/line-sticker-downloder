@@ -6,7 +6,7 @@
     "prepublishOnly": "yarn build"
   },
   "bin": {
-    "line-sticker": "./bin/main.js"
+    "lsdl": "./bin/main.js"
   },
   "name": "line-sticker",
   "version": "1.0.0",
