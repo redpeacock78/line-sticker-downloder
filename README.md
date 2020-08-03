@@ -7,7 +7,7 @@ $ yarn global add line-stirker-downloder
 ```
 or
 ```bash
-$ git clone https://github.com/redpeacock78/line-sticker
+$ git clone https://github.com/redpeacock78/line-stirker-downloder
 $ cd line-stirker-downloder/
 $ npm install
       or
