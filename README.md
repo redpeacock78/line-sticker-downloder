@@ -1,14 +1,14 @@
-## line-sticker
+## line-stirker-downloder
 ### Install
 ```bash
-$ npm install -g line-sticker
+$ npm install -g line-stirker-downloder
              or
-$ yarn global add line-sticker
+$ yarn global add line-stirker-downloder
 ```
 or
 ```bash
 $ git clone https://github.com/redpeacock78/line-sticker
-$ cd line-sticker/
+$ cd line-stirker-downloder/
 $ npm install
       or
 $ yarn install
@@ -19,7 +19,7 @@ $ yarn global add
 ```
 ### Usage
 ```bash
-$ line-sticker -h
+$ lsdl -h
 Usage: main [options] [sticker_id]
 
 Options:
@@ -30,7 +30,7 @@ Options:
   -d --dir <dir>   Specify the directory where you want to store the data
   -h, --help       display help for command
 
-$ line-sticker -a -g -s -d line/ 11978
+$ lsdl -a -g -s -d line/ 11978
 $ tree line/
 line/
 └── Animated_POP_TEAM_EPIC_Sound_Stickers
