@@ -1,4 +1,6 @@
 ## line-sticker-downloder
+Download the data extracted from the LINE sticker.
+
 ### Install
 ```bash
 $ npm install -g line-sticker-downloder
