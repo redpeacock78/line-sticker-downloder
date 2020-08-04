@@ -3,7 +3,7 @@ const fs = require("fs-extra");
 const program = require("commander");
 
 program
-  .version("1.1.0")
+  .version("1.1.1")
   .usage("[options] [sticker_id]")
   .option("-a, --animation", "With animation stickers (APNG)")
   .option("-g, --gif", "With animation stickers (GIF)")
@@ -77,7 +77,7 @@ req(url, (err: string, body) => {
     let _2x_key_png_url: string;
     if (program.custom) {
       png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker.png`;
-      _2x_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}{/iPhone/base/sticker@2x.png`;
+      _2x_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker@2x.png`;
       key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker_key.png`;
       _2x_key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker_key@2x.png`;
     } else if (program.manga) {
