@@ -3,7 +3,7 @@ const fs = require("fs-extra");
 const program = require("commander");
 
 program
-  .version("1.0.6")
+  .version("1.1.0")
   .usage("[options] [sticker_id]")
   .option("-a, --animation", "With animation stickers (APNG)")
   .option("-g, --gif", "With animation stickers (GIF)")
@@ -12,6 +12,8 @@ program
     "-d --dir <dir>",
     "Specify the directory where you want to store the data"
   )
+  .option("-c, --custom", "Custom sticker download Only")
+  .option("-m, --manga", "Mange sticker download Only")
   .parse(process.argv);
 
 const sticker_id = program.args;
@@ -25,7 +27,9 @@ req(url, (err: string, body) => {
 
   //Extract the ID and name of the sticker
   const get_json = JSON.parse(body.body);
-  const title_en: string = get_json.title["en"].replace(/ /g, "_");
+  const title_en: string = get_json.title["en"]
+    .replace(/ /g, "_")
+    .replace(/\"/g, "");
   const stickers_obj: string[] = get_json.stickers;
   const stickers_id: string[] = [];
   for (let i = 0; i < stickers_obj.length; i++) {
@@ -38,10 +42,11 @@ req(url, (err: string, body) => {
   let key_png_dir: string;
   let _2x_key_png_dir: string;
   if (program.dir) {
-    png_dir = `${program.dir}/${title_en}/png`;
-    _2x_png_dir = `${program.dir}/${title_en}/@2x_png`;
-    key_png_dir = `${program.dir}/${title_en}/key_png`;
-    _2x_key_png_dir = `${program.dir}/${title_en}/@2x_key_png`;
+    const dir_name = `${program.dir}/${title_en}`;
+    png_dir = `${dir_name}/png`;
+    _2x_png_dir = `${dir_name}/@2x_png`;
+    key_png_dir = `${dir_name}/key_png`;
+    _2x_key_png_dir = `${dir_name}/@2x_key_png`;
   } else {
     png_dir = `./${title_en}/png`;
     _2x_png_dir = `./${title_en}/@2x_png`;
@@ -65,10 +70,27 @@ req(url, (err: string, body) => {
   //Download the sticker from the extracted ID and save it
   for (let i = 0; i < stickers_id.length; i++) {
     const id: string = stickers_id[i];
-    const png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker.png`;
-    const _2x_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker@2x.png`;
-    const key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_key.png`;
-    const _2x_key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_key@2x.png`;
+
+    let png_url: string;
+    let _2x_png_url: string;
+    let key_png_url: string;
+    let _2x_key_png_url: string;
+    if (program.custom) {
+      png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker.png`;
+      _2x_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}{/iPhone/base/sticker@2x.png`;
+      key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker_key.png`;
+      _2x_key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker_key@2x.png`;
+    } else if (program.manga) {
+      png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker.png`;
+      _2x_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker@2x.png`;
+      key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker_key.png`;
+      _2x_key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker_key@2x.png`;
+    } else {
+      png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker.png`;
+      _2x_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker@2x.png`;
+      key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_key.png`;
+      _2x_key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_key@2x.png`;
+    }
 
     req(
       { method: "GET", url: png_url, encoding: null },
@@ -116,8 +138,9 @@ req(url, (err: string, body) => {
       let a_png_dir: string;
       let _2x_a_png_dir: string;
       if (program.dir) {
-        a_png_dir = `${program.dir}/${title_en}/animation_png`;
-        _2x_a_png_dir = `${program.dir}/${title_en}/@2x_animation_png`;
+        const dir_name = `${program.dir}/${title_en}`;
+        a_png_dir = `${dir_name}/animation_png`;
+        _2x_a_png_dir = `${dir_name}/@2x_animation_png`;
       } else {
         a_png_dir = `./${title_en}/animation_png`;
         _2x_a_png_dir = `./${title_en}/@2x_animation_png`;
@@ -160,8 +183,9 @@ req(url, (err: string, body) => {
       let gif_dir: string;
       let _2x_gif_dir: string;
       if (program.dir) {
-        gif_dir = `${program.dir}/${title_en}/gif`;
-        _2x_gif_dir = `${program.dir}/${title_en}/@2x_gif`;
+        const dir_name = `${program.dir}/${title_en}`;
+        gif_dir = `${dir_name}/gif`;
+        _2x_gif_dir = `${dir_name}/@2x_gif`;
       } else {
         gif_dir = `./${title_en}/gif`;
         _2x_gif_dir = `./${title_en}/@2x_gif`;
