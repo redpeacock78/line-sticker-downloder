@@ -3,7 +3,7 @@ const fs = require("fs-extra");
 const program = require("commander");
 
 program
-  .version("1.0.5")
+  .version("1.0.6")
   .usage("[options] [sticker_id]")
   .option("-a, --animation", "With animation stickers (APNG)")
   .option("-g, --gif", "With animation stickers (GIF)")
