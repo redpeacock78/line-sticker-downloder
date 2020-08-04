@@ -30,6 +30,8 @@ Options:
   -g, --gif        With animation stickers (GIF)
   -s, --sound      With sound(animation) stickers sound (m4a)
   -d --dir <dir>   Specify the directory where you want to store the data
+  -c, --custom     Custom sticker download Only
+  -m, --manga      Mange sticker download Only
   -h, --help       display help for command
 
 $ lsdl -a -g -s -d line/ 11978
