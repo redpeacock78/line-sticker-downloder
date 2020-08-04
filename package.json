@@ -9,10 +9,17 @@
     "lsdl": "./bin/main.js"
   },
   "name": "line-sticker-downloder",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "dist/main.js",
+  "description": "Download the data extracted from the LINE sticker",
   "author": "redpeacock78",
   "license": "MIT",
+  "keywords": [
+    "line",
+    "sticker",
+    "cli",
+    "download"
+  ],
   "dependencies": {
     "@types/node": "^14.0.27",
     "@typescript-eslint/eslint-plugin": "^3.7.1",
