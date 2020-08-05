@@ -1,9 +1,10 @@
 const req = require("request");
 const fs = require("fs-extra");
 const program = require("commander");
+const apng2gif = require("apng2gif");
 
 program
-  .version("1.1.1")
+  .version("1.1.2")
   .usage("[options] [sticker_id]")
   .option("-a, --animation", "With animation stickers (APNG)")
   .option("-g, --gif", "With animation stickers (GIF)")
@@ -96,7 +97,7 @@ req(url, (err: string, body) => {
       { method: "GET", url: png_url, encoding: null },
       (err: string, res, body) => {
         if (!err && res.statusCode === 200) {
-          fs.writeFileSync(`${png_dir}/${id}.png`, body, "binary");
+          fs.writeFile(`${png_dir}/${id}.png`, body, "binary");
         }
       }
     );
@@ -104,7 +105,7 @@ req(url, (err: string, body) => {
       { method: "GET", url: _2x_png_url, encoding: null },
       (err: string, res, body) => {
         if (!err && res.statusCode === 200) {
-          fs.writeFileSync(`${_2x_png_dir}/${id}@2x.png`, body, "binary");
+          fs.writeFile(`${_2x_png_dir}/${id}@2x.png`, body, "binary");
         }
       }
     );
@@ -112,7 +113,7 @@ req(url, (err: string, body) => {
       { method: "GET", url: key_png_url, encoding: null },
       (err: string, res, body) => {
         if (!err && res.statusCode === 200) {
-          fs.writeFileSync(`${key_png_dir}/${id}_key.png`, body, "binary");
+          fs.writeFile(`${key_png_dir}/${id}_key.png`, body, "binary");
         }
       }
     );
@@ -120,30 +121,37 @@ req(url, (err: string, body) => {
       { method: "GET", url: _2x_key_png_url, encoding: null },
       (err: string, res, body) => {
         if (!err && res.statusCode === 200) {
-          fs.writeFileSync(
-            `${_2x_key_png_dir}/${id}@2x_key.png`,
-            body,
-            "binary"
-          );
+          fs.writeFile(`${_2x_key_png_dir}/${id}@2x_key.png`, body, "binary");
         }
       }
     );
   }
 
-  //For animation(apng)
+  //For animation
   if (program.animation) {
     for (let i = 0; i < stickers_id.length; i++) {
       const id: string = stickers_id[i];
 
       let a_png_dir: string;
       let _2x_a_png_dir: string;
+      let gif_dir: string;
+      let _2x_gif_dir: string;
       if (program.dir) {
         const dir_name = `${program.dir}/${title_en}`;
         a_png_dir = `${dir_name}/animation_png`;
         _2x_a_png_dir = `${dir_name}/@2x_animation_png`;
+        if (program.gif) {
+          const dir_name = `${program.dir}/${title_en}`;
+          gif_dir = `${dir_name}/gif`;
+          _2x_gif_dir = `${dir_name}/@2x_gif`;
+        }
       } else {
         a_png_dir = `./${title_en}/animation_png`;
         _2x_a_png_dir = `./${title_en}/@2x_animation_png`;
+        if (program.gif) {
+          gif_dir = `./${title_en}/gif`;
+          _2x_gif_dir = `./${title_en}/@2x_gif`;
+        }
       }
 
       const a_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_animation.png`;
@@ -155,67 +163,37 @@ req(url, (err: string, body) => {
       fs.mkdirs(_2x_a_png_dir, (err: string) => {
         if (err) return console.error(err);
       });
-
-      req(
-        { method: "GET", url: a_png_url, encoding: null },
-        (err: string, res, body) => {
-          if (!err && res.statusCode === 200) {
-            fs.writeFileSync(`${a_png_dir}/${id}.png`, body, "binary");
-          }
-        }
-      );
-      req(
-        { method: "GET", url: _2x_a_png_url, encoding: null },
-        (err: string, res, body) => {
-          if (!err && res.statusCode === 200) {
-            fs.writeFileSync(`${_2x_a_png_dir}/${id}@2x.png`, body, "binary");
-          }
-        }
-      );
-    }
-  }
-
-  //For animation(gif)
-  if (program.gif) {
-    for (let i = 0; i < stickers_id.length; i++) {
-      const id: string = stickers_id[i];
-
-      let gif_dir: string;
-      let _2x_gif_dir: string;
-      if (program.dir) {
-        const dir_name = `${program.dir}/${title_en}`;
-        gif_dir = `${dir_name}/gif`;
-        _2x_gif_dir = `${dir_name}/@2x_gif`;
-      } else {
-        gif_dir = `./${title_en}/gif`;
-        _2x_gif_dir = `./${title_en}/@2x_gif`;
+      if (program.gif) {
+        fs.mkdirs(gif_dir, (err: string) => {
+          if (err) return console.error(err);
+        });
+        fs.mkdirs(_2x_gif_dir, (err: string) => {
+          if (err) return console.error(err);
+        });
       }
 
-      const gif_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_animation.png`;
-      const _2x_gif_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_animation@2x.png`;
-
-      fs.mkdirs(gif_dir, (err: string) => {
-        if (err) return console.error(err);
-      });
-      fs.mkdirs(_2x_gif_dir, (err: string) => {
-        if (err) return console.error(err);
-      });
-
-      req(
-        { method: "GET", url: gif_url, encoding: null },
-        (err: string, res, body) => {
-          if (!err && res.statusCode === 200) {
-            fs.writeFileSync(`${gif_dir}/${id}.gif`, body, "binary");
+      const image_dl = (img_url: string, png: string, gif: string) => {
+        req(
+          { method: "GET", url: img_url, encoding: null },
+          (err: string, res, body) => {
+            if (!err && res.statusCode === 200) {
+              Promise.resolve()
+                .then(fs.writeFileSync(png, body, "binary"))
+                .then(() => {
+                  if (program.gif) {
+                    apng2gif(png, gif);
+                  }
+                });
+            }
           }
-        }
-      );
-      req(
-        { method: "GET", url: _2x_gif_url, encoding: null },
-        (err: string, res, body) => {
-          if (!err && res.statusCode === 200) {
-            fs.writeFileSync(`${_2x_gif_dir}/${id}@2x.gif`, body, "binary");
-          }
-        }
+        );
+      };
+
+      image_dl(a_png_url, `${a_png_dir}/${id}.png`, `${gif_dir}/${id}.gif`);
+      image_dl(
+        _2x_a_png_url,
+        `${_2x_a_png_dir}/${id}@2x.png`,
+        `${_2x_gif_dir}/${id}@2x.gif`
       );
     }
   }
@@ -242,7 +220,7 @@ req(url, (err: string, body) => {
         { method: "GET", url: sound_url, encoding: null },
         (err: string, res, body) => {
           if (!err && res.statusCode === 200) {
-            fs.writeFileSync(`${sound_dir}/${id}.m4a`, body, "binary");
+            fs.writeFile(`${sound_dir}/${id}.m4a`, body, "binary");
           }
         }
       );
