@@ -9,7 +9,7 @@
     "lsdl": "./bin/main.js"
   },
   "name": "line-sticker-downloder",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "main": "dist/main.js",
   "description": "Download the data extracted from the LINE sticker",
   "author": "redpeacock78",
@@ -21,7 +21,9 @@
     "download"
   ],
   "dependencies": {
+    "@types/fs-extra": "^9.0.1",
     "@types/node": "^14.0.27",
+    "@types/request": "^2.48.5",
     "@typescript-eslint/eslint-plugin": "^3.7.1",
     "@typescript-eslint/parser": "^3.7.1",
     "apng2gif": "^1.7.0",
