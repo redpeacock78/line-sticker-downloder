@@ -1,10 +1,10 @@
-const req = require("request");
-const fs = require("fs-extra");
-const program = require("commander");
+import * as req from "request";
+import * as fs from "fs-extra";
+import * as program from "commander";
 const apng2gif = require("apng2gif");
 
 program
-  .version("1.1.2")
+  .version("1.1.3")
   .usage("[options] [sticker_id]")
   .option("-a, --animation", "With animation stickers (APNG)")
   .option("-g, --gif", "With animation stickers (GIF)")
@@ -14,13 +14,13 @@ program
     "Specify the directory where you want to store the data"
   )
   .option("-c, --custom", "Custom sticker download Only")
-  .option("-m, --manga", "Mange sticker download Only")
+  .option("-m, --manga", "Manga sticker download Only")
   .parse(process.argv);
 
-const sticker_id = program.args;
+const sticker_id: string[] = program.args;
 const url = `http://dl.stickershop.line.naver.jp/products/0/0/1/${sticker_id}/iphone/productInfo.meta`;
 
-req(url, (err: string, body) => {
+req(url, (err: string, body: req.Response): void | boolean => {
   if (err !== null) {
     console.error("error:", err);
     return false;
@@ -55,16 +55,16 @@ req(url, (err: string, body) => {
     _2x_key_png_dir = `./${title_en}/@2x_key_png`;
   }
 
-  fs.mkdirs(png_dir, (err: string) => {
+  fs.mkdirs(png_dir, (err: Error): void => {
     if (err) return console.error(err);
   });
-  fs.mkdirs(_2x_png_dir, (err: string) => {
+  fs.mkdirs(_2x_png_dir, (err: Error): void => {
     if (err) return console.error(err);
   });
-  fs.mkdirs(key_png_dir, (err: string) => {
+  fs.mkdirs(key_png_dir, (err: Error): void => {
     if (err) return console.error(err);
   });
-  fs.mkdirs(_2x_key_png_dir, (err: string) => {
+  fs.mkdirs(_2x_key_png_dir, (err: Error): void => {
     if (err) return console.error(err);
   });
 
@@ -95,7 +95,7 @@ req(url, (err: string, body) => {
 
     req(
       { method: "GET", url: png_url, encoding: null },
-      (err: string, res, body) => {
+      (err: string, res: req.Response, body): void => {
         if (!err && res.statusCode === 200) {
           fs.writeFile(`${png_dir}/${id}.png`, body, "binary");
         }
@@ -103,7 +103,7 @@ req(url, (err: string, body) => {
     );
     req(
       { method: "GET", url: _2x_png_url, encoding: null },
-      (err: string, res, body) => {
+      (err: string, res: req.Response, body): void => {
         if (!err && res.statusCode === 200) {
           fs.writeFile(`${_2x_png_dir}/${id}@2x.png`, body, "binary");
         }
@@ -111,7 +111,7 @@ req(url, (err: string, body) => {
     );
     req(
       { method: "GET", url: key_png_url, encoding: null },
-      (err: string, res, body) => {
+      (err: string, res: req.Response, body): void => {
         if (!err && res.statusCode === 200) {
           fs.writeFile(`${key_png_dir}/${id}_key.png`, body, "binary");
         }
@@ -119,7 +119,7 @@ req(url, (err: string, body) => {
     );
     req(
       { method: "GET", url: _2x_key_png_url, encoding: null },
-      (err: string, res, body) => {
+      (err: string, res: req.Response, body): void => {
         if (!err && res.statusCode === 200) {
           fs.writeFile(`${_2x_key_png_dir}/${id}@2x_key.png`, body, "binary");
         }
@@ -157,29 +157,29 @@ req(url, (err: string, body) => {
       const a_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_animation.png`;
       const _2x_a_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_animation@2x.png`;
 
-      fs.mkdirs(a_png_dir, (err: string) => {
+      fs.mkdirs(a_png_dir, (err: Error): void => {
         if (err) return console.error(err);
       });
-      fs.mkdirs(_2x_a_png_dir, (err: string) => {
+      fs.mkdirs(_2x_a_png_dir, (err: Error): void => {
         if (err) return console.error(err);
       });
       if (program.gif) {
-        fs.mkdirs(gif_dir, (err: string) => {
+        fs.mkdirs(gif_dir, (err: Error): void => {
           if (err) return console.error(err);
         });
-        fs.mkdirs(_2x_gif_dir, (err: string) => {
+        fs.mkdirs(_2x_gif_dir, (err: Error): void => {
           if (err) return console.error(err);
         });
       }
 
-      const image_dl = (img_url: string, png: string, gif: string) => {
+      const image_dl = (img_url: string, png: string, gif: string): void => {
         req(
           { method: "GET", url: img_url, encoding: null },
-          (err: string, res, body) => {
+          (err: string, res: req.Response, body): void => {
             if (!err && res.statusCode === 200) {
               Promise.resolve()
-                .then(fs.writeFileSync(png, body, "binary"))
-                .then(() => {
+                .then(this.fs.writeFileSync(png, body, "binary"))
+                .then((): void => {
                   if (program.gif) {
                     apng2gif(png, gif);
                   }
@@ -212,13 +212,13 @@ req(url, (err: string, body) => {
 
       const sound_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/android/sticker_sound.m4a`;
 
-      fs.mkdirs(sound_dir, (err: string) => {
+      fs.mkdirs(sound_dir, (err: Error): void => {
         if (err) return console.error(err);
       });
 
       req(
         { method: "GET", url: sound_url, encoding: null },
-        (err: string, res, body) => {
+        (err: string, res: req.Response, body): void => {
           if (!err && res.statusCode === 200) {
             fs.writeFile(`${sound_dir}/${id}.m4a`, body, "binary");
           }
