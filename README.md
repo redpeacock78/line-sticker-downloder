@@ -26,12 +26,13 @@ Usage: lsdl [options] [sticker_id]
 
 Options:
   -V, --version    output the version number
-  -a, --animation  With animation stickers (APNG)
-  -g, --gif        With animation stickers (GIF)
-  -s, --sound      With sound(animation) stickers sound (m4a)
-  -d --dir <dir>   Specify the directory where you want to store the data
-  -c, --custom     Custom sticker download Only
-  -m, --manga      Manga sticker download Only
+  -d --dir <dir>   Specify the directory where the data is stored (default: ./)
+  -a, --animation  Save the animation stickers as APNG
+  -e, --effect     Save the effect stickers as APNG
+  -g, --gif        Convert animation stickers or effect stickers to GIF and save
+  -s, --sound      Save sticker sounds with sound in m4a
+  -c, --custom     Custom sticker download Only (cannot be used in conjunction with anything other than the -d option)
+  -m, --manga      Manga sticker download Only (cannot be used in conjunction with anything other than the -d option)
   -h, --help       display help for command
 
 $ lsdl -a -g -s -d line/ 11978
