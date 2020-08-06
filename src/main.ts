@@ -4,17 +4,27 @@ import * as program from "commander";
 const apng2gif = require("apng2gif");
 
 program
-  .version("1.1.5")
+  .version("1.2.1")
   .usage("[options] [sticker_id]")
-  .option("-a, --animation", "With animation stickers (APNG)")
-  .option("-g, --gif", "With animation stickers (GIF)")
-  .option("-s, --sound", "With sound(animation) stickers sound (m4a)")
   .option(
     "-d --dir <dir>",
-    "Specify the directory where you want to store the data"
+    "Specify the directory where the data is stored (default: ./)"
   )
-  .option("-c, --custom", "Custom sticker download Only")
-  .option("-m, --manga", "Manga sticker download Only")
+  .option("-a, --animation", "Save the animation stickers as APNG")
+  .option("-e, --effect", "Save the effect stickers as APNG")
+  .option(
+    "-g, --gif",
+    "Convert animation stickers or effect stickers to GIF and save"
+  )
+  .option("-s, --sound", "Save sticker sounds with sound in m4a")
+  .option(
+    "-c, --custom",
+    "Custom sticker download Only (cannot be used in conjunction with anything other than the -d option)"
+  )
+  .option(
+    "-m, --manga",
+    "Manga sticker download Only (cannot be used in conjunction with anything other than the -d option)"
+  )
   .parse(process.argv);
 
 const sticker_id: string[] = program.args;
@@ -192,6 +202,55 @@ req(url, (err: string, body: req.Response): void | boolean => {
         _2x_a_png_url,
         `${_2x_a_png_dir}/${id}@2x.png`,
         `${_2x_gif_dir}/${id}@2x.gif`
+      );
+    }
+  }
+
+  //For Effect
+  if (program.effect) {
+    for (let i = 0; i < stickers_id.length; i++) {
+      const id: string = stickers_id[i];
+
+      let e_png_dir: string;
+      let gif_dir: string;
+      if (program.dir) {
+        const dir_name = `${program.dir}/${title_en}`;
+        e_png_dir = `${dir_name}/effect_png`;
+        if (program.gif) {
+          const dir_name = `${program.dir}/${title_en}`;
+          gif_dir = `${dir_name}/effect_gif`;
+        }
+      } else {
+        e_png_dir = `./${title_en}/effect_png`;
+        if (program.gif) {
+          gif_dir = `./${title_en}/effect_gif`;
+        }
+      }
+
+      const e_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/android/sticker_popup.png`;
+
+      fs.mkdirs(e_png_dir, (err: Error): void => {
+        if (err) return console.error(err);
+      });
+      if (program.gif) {
+        fs.mkdirs(gif_dir, (err: Error): void => {
+          if (err) return console.error(err);
+        });
+      }
+
+      req(
+        { method: "GET", url: e_png_url, encoding: null },
+        (err: string, res: req.Response, body): void => {
+          if (!err && res.statusCode === 200) {
+            fs.writeFile(`${e_png_dir}/${id}.png`, body, "binary").then(
+              (): void => {
+                if (program.gif) {
+                  apng2gif(`${e_png_dir}/${id}.png`, `${gif_dir}/${id}.gif`);
+                }
+              }
+            );
+          }
+        }
       );
     }
   }
