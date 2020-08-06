@@ -4,7 +4,7 @@ import * as program from "commander";
 const apng2gif = require("apng2gif");
 
 program
-  .version("1.1.3")
+  .version("1.1.5")
   .usage("[options] [sticker_id]")
   .option("-a, --animation", "With animation stickers (APNG)")
   .option("-g, --gif", "With animation stickers (GIF)")
@@ -177,13 +177,11 @@ req(url, (err: string, body: req.Response): void | boolean => {
           { method: "GET", url: img_url, encoding: null },
           (err: string, res: req.Response, body): void => {
             if (!err && res.statusCode === 200) {
-              Promise.resolve()
-                .then(this.fs.writeFileSync(png, body, "binary"))
-                .then((): void => {
-                  if (program.gif) {
-                    apng2gif(png, gif);
-                  }
-                });
+              fs.writeFile(png, body, "binary").then((): void => {
+                if (program.gif) {
+                  apng2gif(png, gif);
+                }
+              });
             }
           }
         );
