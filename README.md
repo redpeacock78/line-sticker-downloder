@@ -26,7 +26,7 @@ Usage: lsdl [options] [sticker_id]
 
 Options:
   -V, --version    output the version number
-  -d --dir <dir>   Specify the directory where the data is stored (default: ./)
+  -d, --dir <dir>  Specify the directory where the data is stored (default: ./)
   -a, --animation  Save the animation stickers as APNG
   -e, --effect     Save the effect stickers as APNG
   -g, --gif        Convert animation stickers or effect stickers to GIF and save
