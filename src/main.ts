@@ -4,7 +4,7 @@ import * as program from "commander";
 const apng2gif = require("apng2gif");
 
 program
-  .version("1.2.2")
+  .version("1.2.3")
   .usage("[options] [sticker_id]")
   .option(
     "-d, --dir <dir>",
