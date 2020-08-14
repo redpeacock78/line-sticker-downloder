@@ -42,9 +42,7 @@ const image_dl = (img_url: string, png: string, gif: string): void => {
     (err: string, res: req.Response, body: req.RequestCallback): void => {
       if (!err && res.statusCode === 200) {
         fs.writeFile(png, body, "binary").then((): void => {
-          if (program.gif) {
-            apng2gif(png, gif);
-          }
+          gif !== null ? apng2gif(png, gif) : "";
         });
       }
     }
@@ -68,25 +66,23 @@ req(url, (err: string, body: req.Response): void | boolean => {
     stickers_id[i] = stickers_obj[i]["id"];
   }
 
-  let png_dir: string;
-  let _2x_png_dir: string;
-  let key_png_dir: string;
-  let _2x_key_png_dir: string;
-  let dir_names: string[] = [];
-  if (program.dir) {
-    const dir_name = `${program.dir}/${title_en}`;
-    png_dir = `${dir_name}/png`;
-    _2x_png_dir = `${dir_name}/@2x_png`;
-    key_png_dir = `${dir_name}/key_png`;
-    _2x_key_png_dir = `${dir_name}/@2x_key_png`;
-    dir_names = [png_dir, _2x_png_dir, key_png_dir, _2x_key_png_dir];
-  } else {
-    png_dir = `./${title_en}/png`;
-    _2x_png_dir = `./${title_en}/@2x_png`;
-    key_png_dir = `./${title_en}/key_png`;
-    _2x_key_png_dir = `./${title_en}/@2x_key_png`;
-    dir_names = [png_dir, _2x_png_dir, key_png_dir, _2x_key_png_dir];
-  }
+  const dir_name = `${program.dir}/${title_en}`;
+  const png_dir: string = program.dir ? `${dir_name}/png` : `./${title_en}/png`;
+  const _2x_png_dir: string = program.dir
+    ? `${dir_name}/@2x_png`
+    : `./${title_en}/@2x_png`;
+  const key_png_dir: string = program.dir
+    ? `${dir_name}/key_png`
+    : `./${title_en}/key_png`;
+  const _2x_key_png_dir: string = program.dir
+    ? `${dir_name}/@2x_key_png`
+    : `./${title_en}/@2x_key_png`;
+  const dir_names: string[] = [
+    png_dir,
+    _2x_png_dir,
+    key_png_dir,
+    _2x_key_png_dir,
+  ];
 
   Promise.resolve()
     .then((): void => {
@@ -100,26 +96,26 @@ req(url, (err: string, body: req.Response): void | boolean => {
         //Download the sticker from the extracted ID and save it
         const id: string = stickers_id[i];
 
-        let png_url: string;
-        let _2x_png_url: string;
-        let key_png_url: string;
-        let _2x_key_png_url: string;
-        if (program.custom) {
-          png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker.png`;
-          _2x_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker@2x.png`;
-          key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker_key.png`;
-          _2x_key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker_key@2x.png`;
-        } else if (program.manga) {
-          png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker.png`;
-          _2x_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker@2x.png`;
-          key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker_key.png`;
-          _2x_key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker_key@2x.png`;
-        } else {
-          png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker.png`;
-          _2x_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker@2x.png`;
-          key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_key.png`;
-          _2x_key_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_key@2x.png`;
-        }
+        const png_url: string = program.custom
+          ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker.png`
+          : program.manga
+          ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker.png`
+          : `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker.png`;
+        const _2x_png_url: string = program.custom
+          ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker@2x.png`
+          : program.manga
+          ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker@2x.png`
+          : `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker@2x.png`;
+        const key_png_url: string = program.custom
+          ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker_key.png`
+          : program.manga
+          ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker_key.png`
+          : `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_key.png`;
+        const _2x_key_png_url: string = program.custom
+          ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker_key@2x.png`
+          : program.manga
+          ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker_key@2x.png`
+          : `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_key@2x.png`;
 
         image_dl(png_url, `${png_dir}/${id}.png`, null);
         image_dl(_2x_png_url, `${_2x_png_dir}/${id}@2x.png`, null);
@@ -212,9 +208,7 @@ req(url, (err: string, body: req.Response): void | boolean => {
       Promise.resolve()
         .then((): void => {
           mkdir(e_png_dir);
-          if (program.gif) {
-            mkdir(gif_dir);
-          }
+          program.gif ? mkdir(gif_dir) : "";
         })
         .then((): void => {
           image_dl(e_png_url, `${e_png_dir}/${id}.png`, `${gif_dir}/${id}.gif`);
@@ -227,12 +221,9 @@ req(url, (err: string, body: req.Response): void | boolean => {
     for (let i = 0; i < stickers_id.length; i++) {
       const id: string = stickers_id[i];
 
-      let sound_dir: string;
-      if (program.dir) {
-        sound_dir = `${program.dir}/${title_en}/sound`;
-      } else {
-        sound_dir = `./${title_en}/sound`;
-      }
+      const sound_dir: string = program.dir
+        ? `${program.dir}/${title_en}/sound`
+        : `./${title_en}/sound`;
 
       const sound_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/android/sticker_sound.m4a`;
 
