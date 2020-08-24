@@ -6,11 +6,10 @@ This software is released under the MIT License, see LICENSE.
 import * as req from "request";
 import * as fs from "fs-extra";
 import * as program from "commander";
-import { stringify } from "querystring";
 const apng2gif = require("apng2gif");
 
 program
-  .version("1.2.4")
+  .version("1.2.5")
   .usage("[options] [sticker_id]")
   .option(
     "-d, --dir <dir>",
@@ -46,11 +45,11 @@ const image_dl = (img_url: string, png: string, gif: string): void => {
   req(
     { method: "GET", url: img_url, encoding: null },
     (err: string, res: req.Response, body: req.RequestCallback): void => {
-      if (!err && res.statusCode === 200) {
-        fs.writeFile(png, body, "binary").then((): void => {
-          gif !== null ? apng2gif(png, gif) : "";
-        });
-      }
+      !err && res.statusCode === 200
+        ? fs.writeFile(png, body, "binary").then((): void => {
+            gif !== null ? apng2gif(png, gif) : "";
+          })
+        : "";
     }
   );
 };
@@ -167,16 +166,27 @@ req(url, (err: string, body: req.Response): void | boolean => {
               : "";
           })
           .then((): void => {
-            image_dl(
-              a_png_url,
-              `${a_png_dir}/${id}.png`,
-              `${gif_dir}/${id}.gif`
-            );
-            image_dl(
-              _2x_a_png_url,
-              `${_2x_a_png_dir}/${id}@2x.png`,
-              `${_2x_gif_dir}/${id}@2x.gif`
-            );
+            program.gif
+              ? (): void => {
+                  image_dl(
+                    a_png_url,
+                    `${a_png_dir}/${id}.png`,
+                    `${gif_dir}/${id}.gif`
+                  );
+                  image_dl(
+                    _2x_a_png_url,
+                    `${_2x_a_png_dir}/${id}@2x.png`,
+                    `${_2x_gif_dir}/${id}@2x.gif`
+                  );
+                }
+              : (): void => {
+                  image_dl(a_png_url, `${a_png_dir}/${id}.png`, null);
+                  image_dl(
+                    _2x_a_png_url,
+                    `${_2x_a_png_dir}/${id}@2x.png`,
+                    null
+                  );
+                };
           });
       })
     : "";
@@ -201,11 +211,13 @@ req(url, (err: string, body: req.Response): void | boolean => {
             program.gif ? mkdir(gif_dir) : "";
           })
           .then((): void => {
-            image_dl(
-              e_png_url,
-              `${e_png_dir}/${id}.png`,
-              `${gif_dir}/${id}.gif`
-            );
+            program.gif
+              ? image_dl(
+                  e_png_url,
+                  `${e_png_dir}/${id}.png`,
+                  `${gif_dir}/${id}.gif`
+                )
+              : image_dl(e_png_url, `${e_png_dir}/${id}.png`, null);
           });
       })
     : "";
