@@ -9,10 +9,12 @@ import * as program from "commander";
 const apng2gif = require("apng2gif");
 
 program
-  .version("1.2.5")
+  .version("1.2.6", "-v, --version", "Output the version number")
+  .name("lsdl")
   .usage("[options] [sticker_id]")
+  .description("Download the data extracted from the LINE sticker.")
   .option(
-    "-d, --dir <dir>",
+    "-d, --dir <dir_name>",
     "Specify the directory where the data is stored (default: ./)"
   )
   .option("-a, --animation", "Save the animation stickers as APNG")
@@ -30,14 +32,34 @@ program
     "-m, --manga",
     "Manga sticker download Only (cannot be used in conjunction with anything other than the -d option)"
   )
+  .on("--help", () => {
+    console.log("");
+    console.log("Example:");
+    console.log("  $ lsdl -a -g -s 11978");
+    console.log("  $ lsdl -a -g -s -d line/ 11978");
+    console.log(
+      "  $ lsdl https://store.line.me/stickershop/product/7457240/ja"
+    );
+    console.log(
+      "  $ lsdl -d line/ https://store.line.me/stickershop/product/8290086/ja?from=sticker"
+    );
+  })
   .parse(process.argv);
 
-const sticker_id: string[] = program.args;
+const sticker_id = Number(
+  program.args[0].slice(0, 42) !== "https://store.line.me/stickershop/product/"
+    ? program.args[0]
+    : program.args[0].split("/")[5]
+);
 const url = `http://dl.stickershop.line.naver.jp/products/0/0/1/${sticker_id}/iphone/productInfo.meta`;
 
 const mkdir = (dir_neme: string): void => {
   fs.mkdirs(dir_neme, (err: Error): void => {
-    if (err) return console.error(err);
+    err
+      ? (): void => {
+          return console.error(err);
+        }
+      : "";
   });
 };
 
@@ -55,10 +77,12 @@ const image_dl = (img_url: string, png: string, gif: string): void => {
 };
 
 req(url, (err: string, body: req.Response): void | boolean => {
-  if (err !== null) {
-    console.error("error:", err);
-    return false;
-  }
+  err !== null
+    ? (): boolean => {
+        console.error("error:", err);
+        return false;
+      }
+    : "";
 
   //Extract the ID and name of the sticker
   const get_json = JSON.parse(body.body);
@@ -67,12 +91,12 @@ req(url, (err: string, body: req.Response): void | boolean => {
     .replace(/\"/g, "");
   const stickers_obj: { id: number; width: number; height: number }[] =
     get_json.stickers;
-  const stickers_id: string[] = stickers_obj.reduce((x, y) => {
+  const stickers_id: number[] = stickers_obj.reduce((x, y) => {
     x[y.id] = y.id;
     return x;
   }, []);
 
-  stickers_id.forEach((id: string): void => {
+  stickers_id.filter((id: number): void => {
     const dir_name = `${program.dir}/${title_en}`;
     const png_dir: string = program.dir
       ? `${dir_name}/png`
@@ -114,7 +138,7 @@ req(url, (err: string, body: req.Response): void | boolean => {
       : `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_key@2x.png`;
     Promise.resolve()
       .then((): void => {
-        dir_names.forEach((v: string): void => {
+        dir_names.filter((v: string): void => {
           mkdir(v);
         });
       })
@@ -128,7 +152,7 @@ req(url, (err: string, body: req.Response): void | boolean => {
 
   //For animation
   program.animation
-    ? stickers_id.forEach((id: string): void => {
+    ? stickers_id.filter((id: number): void => {
         const dir_name: string = program.dir
           ? `${program.dir}/${title_en}`
           : "";
@@ -156,11 +180,11 @@ req(url, (err: string, body: req.Response): void | boolean => {
         const _2x_a_png_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_animation@2x.png`;
         Promise.resolve()
           .then((): void => {
-            a_png_dirs.forEach((v: string): void => {
+            a_png_dirs.filter((v: string): void => {
               mkdir(v);
             });
             program.gif
-              ? gif_dirs.forEach((v: string): void => {
+              ? gif_dirs.filter((v: string): void => {
                   mkdir(v);
                 })
               : "";
@@ -193,7 +217,7 @@ req(url, (err: string, body: req.Response): void | boolean => {
 
   //For Effect
   program.effect
-    ? stickers_id.forEach((id: string): void => {
+    ? stickers_id.filter((id: number): void => {
         const dir_name = `${program.dir}/${title_en}`;
         const e_png_dir: string = program.dir
           ? `${dir_name}/effect_png`
@@ -224,7 +248,7 @@ req(url, (err: string, body: req.Response): void | boolean => {
 
   //For sound
   program.sound
-    ? stickers_id.forEach((id: string): void => {
+    ? stickers_id.filter((id: number): void => {
         const sound_dir: string = program.dir
           ? `${program.dir}/${title_en}/sound`
           : `./${title_en}/sound`;
