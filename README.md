@@ -24,16 +24,29 @@ $ yarn global add
 $ lsdl -h
 Usage: lsdl [options] [sticker_id]
 
+Download the data extracted from the LINE sticker.
+
 Options:
-  -V, --version    output the version number
-  -d, --dir <dir>  Specify the directory where the data is stored (default: ./)
-  -a, --animation  Save the animation stickers as APNG
-  -e, --effect     Save the effect stickers as APNG
-  -g, --gif        Convert animation stickers or effect stickers to GIF and save
-  -s, --sound      Save sticker sounds with sound in m4a
-  -c, --custom     Custom sticker download Only (cannot be used in conjunction with anything other than the -d option)
-  -m, --manga      Manga sticker download Only (cannot be used in conjunction with anything other than the -d option)
-  -h, --help       display help for command
+  -v, --version         Output the version number
+  -d, --dir <dir_name>  Specify the directory where the data is stored
+                        (default: ./)
+  -a, --animation       Save the animation stickers as APNG
+  -e, --effect          Save the effect stickers as APNG
+  -g, --gif             Convert animation stickers or effect stickers to GIF
+                        and save
+  -s, --sound           Save sticker sounds with sound in m4a
+  -c, --custom          Custom sticker download Only (cannot be used in
+                        conjunction with anything other than the -d option)
+  -m, --manga           Manga sticker download Only (cannot be used in
+                        conjunction with anything other than the -d option)
+  -h, --help            display help for command
+
+Example:
+  $ lsdl -a -g -s 11978
+  $ lsdl -a -g -s -d line/ 11978
+  $ lsdl https://store.line.me/stickershop/product/7457240/ja
+  $ lsdl -d line/ https://store.line.me/stickershop/product/8290086/ja?from=sticker
+
 
 $ lsdl -a -g -s -d line/ 11978
 $ tree line/
