@@ -6,10 +6,12 @@ This software is released under the MIT License, see LICENSE.
 import * as req from "request";
 import * as fs from "fs-extra";
 import * as program from "commander";
-const apng2gif = require("apng2gif");
+import { apng2gif } from "./@types/apng2gif";
+import * as json from "./@types/sticker-json";
+const apng2gif: apng2gif = require("apng2gif");
 
 program
-  .version("1.2.6", "-v, --version", "Output the version number")
+  .version("1.2.7", "-v, --version", "Output the version number")
   .name("lsdl")
   .usage("[options] [sticker_id]")
   .description("Download the data extracted from the LINE sticker.")
@@ -63,13 +65,13 @@ const mkdir = (dir_neme: string): void => {
   });
 };
 
-const image_dl = (img_url: string, png: string, gif: string): void => {
+const image_dl = (img_url: string, png: string, gif?: string): void => {
   req(
     { method: "GET", url: img_url, encoding: null },
     (err: string, res: req.Response, body: req.RequestCallback): void => {
       !err && res.statusCode === 200
         ? fs.writeFile(png, body, "binary").then((): void => {
-            gif !== null ? apng2gif(png, gif) : "";
+            !gif ? "" : apng2gif(png, gif);
           })
         : "";
     }
@@ -85,12 +87,11 @@ req(url, (err: string, body: req.Response): void | boolean => {
     : "";
 
   //Extract the ID and name of the sticker
-  const get_json = JSON.parse(body.body);
+  const get_json: json.StickerObkect = JSON.parse(body.body);
   const title_en: string = get_json.title["en"]
     .replace(/ /g, "_")
     .replace(/\"/g, "");
-  const stickers_obj: { id: number; width: number; height: number }[] =
-    get_json.stickers;
+  const stickers_obj: json.StickersData[] = get_json.stickers;
   const stickers_id: number[] = stickers_obj.reduce((x, y) => {
     x[y.id] = y.id;
     return x;
@@ -191,26 +192,23 @@ req(url, (err: string, body: req.Response): void | boolean => {
           })
           .then((): void => {
             program.gif
-              ? (): void => {
-                  image_dl(
+              ? image_dl(
                     a_png_url,
                     `${a_png_dir}/${id}.png`,
                     `${gif_dir}/${id}.gif`
-                  );
-                  image_dl(
+                  )
+              : image_dl(a_png_url, `${a_png_dir}/${id}.png`, null);
+            program.gif
+              ? image_dl(
                     _2x_a_png_url,
                     `${_2x_a_png_dir}/${id}@2x.png`,
                     `${_2x_gif_dir}/${id}@2x.gif`
-                  );
-                }
-              : (): void => {
-                  image_dl(a_png_url, `${a_png_dir}/${id}.png`, null);
-                  image_dl(
+                  )
+              : image_dl(
                     _2x_a_png_url,
                     `${_2x_a_png_dir}/${id}@2x.png`,
                     null
                   );
-                };
           });
       })
     : "";
@@ -241,7 +239,7 @@ req(url, (err: string, body: req.Response): void | boolean => {
                   `${e_png_dir}/${id}.png`,
                   `${gif_dir}/${id}.gif`
                 )
-              : image_dl(e_png_url, `${e_png_dir}/${id}.png`, null);
+              : image_dl(e_png_url, `${e_png_dir}/${id}.png`);
           });
       })
     : "";
