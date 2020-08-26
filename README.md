@@ -19,6 +19,10 @@ $ node install -g
       or
 $ yarn global add
 ```
+or
+```bash
+$ npx line-sticker-downloder -h
+```
 ### Usage
 ```bash
 $ lsdl -h
@@ -281,5 +285,5 @@ line/
 10 directories, 216 files
 
 ```
-### LIcense
+### License
 This source code is licensed MIT.
