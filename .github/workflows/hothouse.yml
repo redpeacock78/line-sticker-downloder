@@ -1,0 +1,29 @@
+name: check npm
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '00 03 * * *'
+
+jobs:
+  run-hothouse:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@master
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - name: Setiing
+        run: |
+          npm i -g npm
+          npm -v
+          npm i -g hothouse
+          git config user.name "hothouse"
+          git config user.email "hothouse@example.com"
+      - name: run
+        run: |
+          hothouse --no-per-package -t ${{ secrets.HOTHOUSE_TOKEN }}
