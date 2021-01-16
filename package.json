@@ -28,7 +28,7 @@
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
     "apng2gif": "^1.7.0",
-    "commander": "^6.0.0",
+    "commander": "^7.0.0",
     "eslint": "^7.6.0",
     "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-prettier": "^3.1.4",
