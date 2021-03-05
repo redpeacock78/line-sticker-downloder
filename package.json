@@ -9,7 +9,7 @@
     "lsdl": "./bin/main.js"
   },
   "name": "line-sticker-downloder",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "main": "dist/main.js",
   "description": "Download the data extracted from the LINE sticker",
   "repository": "https://github.com/redpeacock78/line-sticker-downloder",
