@@ -1,7 +1,7 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "sourceMap": true,
-      "target": "ES2019"
-    }
+  "compilerOptions": {
+    "module": "commonjs",
+    "sourceMap": true,
+    "target": "ES2019"
+  }
 }
