@@ -5,9 +5,10 @@ This software is released under the MIT License, see LICENSE.
 
 import * as req from "request";
 import * as fs from "fs-extra";
-import * as program from "commander";
-import { apng2gif } from "./@types/apng2gif";
 import * as json from "./@types/sticker-json";
+import { apng2gif } from "./@types/apng2gif";
+import { InterfaceCLI } from "./@types/interface-cli"
+const program: InterfaceCLI = require("commander");
 const apng2gif: apng2gif = require("apng2gif");
 
 program
@@ -148,7 +149,11 @@ const main = (url: string): void | boolean => {
             image_dl(png_url, `${png_dir}/${id}.png`, null);
             image_dl(_2x_png_url, `${_2x_png_dir}/${id}@2x.png`, null);
             image_dl(key_png_url, `${key_png_dir}/${id}_key.png`, null);
-            image_dl(_2x_key_png_url, `${_2x_key_png_dir}/${id}@2x_key.png`, null);
+            image_dl(
+              _2x_key_png_url,
+              `${_2x_key_png_dir}/${id}@2x_key.png`,
+              null
+            );
           });
       });
 
@@ -262,9 +267,9 @@ const main = (url: string): void | boolean => {
         })
         : "";
     } else {
-      return false
+      return false;
     }
   });
-}
+};
 
 main(info_url) ? "" : main(info_url_2);
