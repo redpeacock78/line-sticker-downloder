@@ -16,12 +16,10 @@ jobs:
         with:
           node-version: 14
           registry-url: "https://registry.npmjs.org/"
-      - name: Run Setup
-        run: yarn install
       - name: Install can-npm-publish and Dependencies
         run: |
-          npm install can-npm-publish
-          npm ci
+          yarn add can-npm-publish
+          yarn install --frozen-lockfile
       - name: check version and add tag
         run: ./release.sh
         env:
