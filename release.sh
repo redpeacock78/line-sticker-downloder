@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # check this version is enable to release or not
-npx can-npm-publish
+npx -y can-npm-publish
 if [[ "${?}" == 1 ]]; then
     exit 255
 fi
