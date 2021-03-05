@@ -1,0 +1,36 @@
+name: Npm Publish
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - "!*"
+
+ jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+          registry-url: "https://registry.npmjs.org/"
+      - name: Run Setup
+        run: yarn install
+      - name: Install can-npm-publish and Dependencies
+        run: |
+          npm install can-npm-publish
+          npm ci
+      - name: check version and add tag
+        run: ./release.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          COMMIT: ${{ github.sha }}
+      - name: Run Build
+        run: yarn build
+      - name: Run Release
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
