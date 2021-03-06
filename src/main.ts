@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2020 redpeacock78
+Copyright (c) 2020-2021 redpeacock78
 This software is released under the MIT License, see LICENSE.
 */
 
@@ -10,14 +10,14 @@ import axios, { AxiosResponse } from "axios";
 import * as json from "./@types/sticker-json";
 import { apng2gif } from "./@types/apng2gif";
 const apng2gif: apng2gif = require("apng2gif");
-const packageJson = require("../package.json")
+const packageJson = require("../package.json");
 
 const program = new Command();
 program
   .version(packageJson.version, "-v, --version", "Output the version number")
   .name("lsdl")
   .usage("[options] [sticker_id]")
-  .description("Download the data extracted from the LINE sticker.")
+  .description(packageJson.description)
   .option(
     "-d, --dir <dir_name>",
     "Specify the directory where the data is stored (default: ./)"
@@ -84,7 +84,6 @@ const image_dl = async (img_url: string, png: string, gif?: string): Promise<voi
 
 const main = async (url: string): Promise<boolean> => {
   return await axios.get(url).then((resp: AxiosResponse<string>): true => {
-
     //Extract the ID and name of the sticker
     const get_json: json.StickerObkect = JSON.parse(JSON.stringify(resp.data));
     const title_en: string = get_json.title["en"]
@@ -264,7 +263,7 @@ const main = async (url: string): Promise<boolean> => {
     return true;
   }).catch((): false => {
     return false;
-  })
+  });
 };
 
 main(info_url).then((result: boolean): void => {
@@ -276,7 +275,7 @@ main(info_url).then((result: boolean): void => {
           console.error("Refer 'lsdl -h' or 'lsdl --help' for how to use the command.");
           process.exit(1);
         });
-      }
+      };
     });
-  }
+  };
 });
