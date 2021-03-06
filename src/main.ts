@@ -97,21 +97,16 @@ const main = async (url: string): Promise<boolean> => {
     }, []);
 
     stickers_id.filter((id: number): void => {
-      // @ts-ignore
       const dir_name = `${options.dir}/${title_en}`;
-      // @ts-ignore
       const png_dir: string = options.dir
         ? `${dir_name}/png`
         : `./${title_en}/png`;
-      // @ts-ignore
       const _2x_png_dir: string = options.dir
         ? `${dir_name}/@2x_png`
         : `./${title_en}/@2x_png`;
-      // @ts-ignore
       const key_png_dir: string = options.dir
         ? `${dir_name}/key_png`
         : `./${title_en}/key_png`;
-      // @ts-ignore
       const _2x_key_png_dir: string = options.dir
         ? `${dir_name}/@2x_key_png`
         : `./${title_en}/@2x_key_png`;
@@ -121,31 +116,23 @@ const main = async (url: string): Promise<boolean> => {
         key_png_dir,
         _2x_key_png_dir,
       ];
-      // @ts-ignore
       const png_url: string = options.custom
         ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker.png`
-        // @ts-ignore
         : options.manga
           ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker.png`
           : `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker.png`;
-      // @ts-ignore
       const _2x_png_url: string = options.custom
         ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker@2x.png`
-        // @ts-ignore
         : options.manga
           ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker@2x.png`
           : `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker@2x.png`;
-      // @ts-ignore
       const key_png_url: string = options.custom
         ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker_key.png`
-        // @ts-ignore
         : options.manga
           ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker_key.png`
           : `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_key.png`;
-      // @ts-ignore
       const _2x_key_png_url: string = options.custom
         ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/sticker_key@2x.png`
-        // @ts-ignore
         : options.manga
           ? `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/base/plus/sticker_key@2x.png`
           : `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/iPhone/sticker_key@2x.png`;
@@ -167,36 +154,26 @@ const main = async (url: string): Promise<boolean> => {
     });
 
     //For animation
-    // @ts-ignore
     options.animation
       ? stickers_id.filter((id: number): void => {
-        // @ts-ignore
         const dir_name: string = options.dir
-          // @ts-ignore
           ? `${options.dir}/${title_en}`
           : "";
-        // @ts-ignore
         const a_png_dir: string = options.dir
-          // @ts-ignore
           ? `${dir_name}/animation_png`
           : `./${title_en}/animation_png`;
-        // @ts-ignore
         const _2x_a_png_dir: string = options.dir
           ? `${dir_name}/@2x_animation_png`
           : `./${title_en}/@2x_animation_png`;
         const gif_dir: string =
-          // @ts-ignore
           options.dir && options.gif
             ? `${dir_name}/gif`
-            // @ts-ignore
             : options.gif
               ? `./${title_en}/gif`
               : "";
         const _2x_gif_dir: string =
-          // @ts-ignore
           options.dir && options.gif
             ? `${dir_name}/@2x_gif`
-            // @ts-ignore
             : options.gif
               ? `./${title_en}/@2x_gif`
               : "";
@@ -209,7 +186,6 @@ const main = async (url: string): Promise<boolean> => {
             a_png_dirs.filter((v: string): void => {
               mkdir(v);
             });
-            // @ts-ignore
             options.gif
               ? gif_dirs.filter((v: string): void => {
                 mkdir(v);
@@ -217,7 +193,6 @@ const main = async (url: string): Promise<boolean> => {
               : "";
           })
           .then((): void => {
-            // @ts-ignore
             options.gif
               ? image_dl(
                 a_png_url,
@@ -225,7 +200,6 @@ const main = async (url: string): Promise<boolean> => {
                 `${gif_dir}/${id}.gif`
               )
               : image_dl(a_png_url, `${a_png_dir}/${id}.png`);
-            // @ts-ignore
             options.gif
               ? image_dl(
                 _2x_a_png_url,
@@ -241,20 +215,15 @@ const main = async (url: string): Promise<boolean> => {
       : "";
 
     //For Effect
-    // @ts-ignore
     options.effect
       ? stickers_id.filter((id: number): void => {
-        // @ts-ignore
         const dir_name = `${options.dir}/${title_en}`;
-        // @ts-ignore
         const e_png_dir: string = options.dir
           ? `${dir_name}/effect_png`
           : `./${title_en}/effect_png`;
         const gif_dir: string =
-          // @ts-ignore
           options.dir && options.gif
             ? `${dir_name}/effect_gif`
-            // @ts-ignore
             : options.gif
               ? `./${title_en}/effect_gif`
               : "";
@@ -262,11 +231,9 @@ const main = async (url: string): Promise<boolean> => {
         Promise.resolve()
           .then((): void => {
             mkdir(e_png_dir);
-            // @ts-ignore
             options.gif ? mkdir(gif_dir) : "";
           })
           .then((): void => {
-            // @ts-ignore
             options.gif
               ? image_dl(
                 e_png_url,
@@ -279,12 +246,9 @@ const main = async (url: string): Promise<boolean> => {
       : "";
 
     //For sound
-    // @ts-ignore
     options.sound
       ? stickers_id.filter((id: number): void => {
-        // @ts-ignore
         const sound_dir: string = options.dir
-          // @ts-ignore
           ? `${options.dir}/${title_en}/sound`
           : `./${title_en}/sound`;
         const sound_url = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${id}/android/sticker_sound.m4a`;
