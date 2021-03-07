@@ -18,7 +18,7 @@ jobs:
           registry-url: "https://registry.npmjs.org/"
       - name: Install can-npm-publish and Dependencies
         run: |
-          yarn add can-npm-publish
+          yarn add -D can-npm-publish
           yarn install --frozen-lockfile
       - name: check version and add tag
         run: ./release.sh
