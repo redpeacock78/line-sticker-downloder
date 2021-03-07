@@ -82,6 +82,10 @@ const image_dl = async (img_url: string, png: string, gif?: string): Promise<voi
   );
 };
 
+const pararels = (...promises: (() => Promise<any>)[]): Promise<any> => {
+  return Promise.all(promises.map((p: any): Promise<any> => p()));
+}
+
 const main = async (url: string): Promise<boolean> => {
   return await axios.get(url).then((resp: AxiosResponse<string>): true => {
     //Extract the ID and name of the sticker
@@ -95,7 +99,7 @@ const main = async (url: string): Promise<boolean> => {
       return x;
     }, []);
 
-    stickers_id.filter((id: number): void => {
+    stickers_id.map((id: number): void => {
       const dir_name = `${options.dir}/${title_en}`;
       const png_dir: string = options.dir
         ? `${dir_name}/png`
@@ -141,20 +145,30 @@ const main = async (url: string): Promise<boolean> => {
             mkdir(v);
           });
         })
-        .then((): void => {
-          image_dl(png_url, `${png_dir}/${id}.png`);
-          image_dl(_2x_png_url, `${_2x_png_dir}/${id}@2x.png`);
-          image_dl(key_png_url, `${key_png_dir}/${id}_key.png`);
-          image_dl(
-            _2x_key_png_url,
-            `${_2x_key_png_dir}/${id}@2x_key.png`
-          );
+        .then(async (): Promise<void> => {
+          await pararels(
+            async (): Promise<void> => {
+              await image_dl(png_url, `${png_dir}/${id}.png`);
+            },
+            async (): Promise<void> => {
+              await image_dl(_2x_png_url, `${_2x_png_dir}/${id}@2x.png`);
+            },
+            async (): Promise<void> => {
+              await image_dl(key_png_url, `${key_png_dir}/${id}_key.png`);
+            },
+            async (): Promise<void> => {
+              await image_dl(
+                _2x_key_png_url,
+                `${_2x_key_png_dir}/${id}@2x_key.png`
+              );
+            }
+          )
         });
     });
 
     //For animation
     options.animation
-      ? stickers_id.filter((id: number): void => {
+      ? stickers_id.map((id: number): void => {
         const dir_name: string = options.dir
           ? `${options.dir}/${title_en}`
           : "";
@@ -191,31 +205,37 @@ const main = async (url: string): Promise<boolean> => {
               })
               : "";
           })
-          .then((): void => {
-            options.gif
-              ? image_dl(
-                a_png_url,
-                `${a_png_dir}/${id}.png`,
-                `${gif_dir}/${id}.gif`
-              )
-              : image_dl(a_png_url, `${a_png_dir}/${id}.png`);
-            options.gif
-              ? image_dl(
-                _2x_a_png_url,
-                `${_2x_a_png_dir}/${id}@2x.png`,
-                `${_2x_gif_dir}/${id}@2x.gif`
-              )
-              : image_dl(
-                _2x_a_png_url,
-                `${_2x_a_png_dir}/${id}@2x.png`
-              );
+          .then(async (): Promise<void> => {
+            await pararels(
+              async (): Promise<void> => {
+                options.gif
+                  ? image_dl(
+                    a_png_url,
+                    `${a_png_dir}/${id}.png`,
+                    `${gif_dir}/${id}.gif`
+                  )
+                  : image_dl(a_png_url, `${a_png_dir}/${id}.png`);
+              },
+              async (): Promise<void> => {
+                options.gif
+                  ? image_dl(
+                    _2x_a_png_url,
+                    `${_2x_a_png_dir}/${id}@2x.png`,
+                    `${_2x_gif_dir}/${id}@2x.gif`
+                  )
+                  : image_dl(
+                    _2x_a_png_url,
+                    `${_2x_a_png_dir}/${id}@2x.png`
+                  );
+              }
+            )
           });
       })
       : "";
 
     //For Effect
     options.effect
-      ? stickers_id.filter((id: number): void => {
+      ? stickers_id.map((id: number): void => {
         const dir_name = `${options.dir}/${title_en}`;
         const e_png_dir: string = options.dir
           ? `${dir_name}/effect_png`
@@ -246,7 +266,7 @@ const main = async (url: string): Promise<boolean> => {
 
     //For sound
     options.sound
-      ? stickers_id.filter((id: number): void => {
+      ? stickers_id.map((id: number): void => {
         const sound_dir: string = options.dir
           ? `${options.dir}/${title_en}/sound`
           : `./${title_en}/sound`;
