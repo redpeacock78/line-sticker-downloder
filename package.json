@@ -25,7 +25,7 @@
     "apng2gif": "^1.7.0",
     "axios": "^0.21.1",
     "commander": "^7.0.0",
-    "fs-extra": "^9.0.1",
+    "fs-extra": "^10.0.0",
     "request": "^2.88.2"
   },
   "devDependencies": {
