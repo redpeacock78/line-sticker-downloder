@@ -23,7 +23,7 @@
   ],
   "dependencies": {
     "apng2gif": "^1.7.0",
-    "axios": "^0.25.0",
+    "axios": "^0.26.0",
     "commander": "^9.0.0",
     "fs-extra": "^10.0.0",
     "request": "^2.88.2"
